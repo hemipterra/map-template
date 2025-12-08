@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<title>Map template</title>
+		<script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+		<link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+		<style>
+		/*in the line below, would a period work the same as a pound sign?*/
+            body { margin: 0; padding: 0; }
+            html, body, #map { height: 100%; }
+/*			#map {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}*/
+			.maplibregl-popup {
+        		max-width: 400px;
+        		font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    		}
+		</style>
+</head>
+<body>
+    <style>
+        #fly {
+                display: block;
+                position: absolute;
+                top: 20px;
+                left: 50%;
+                transform: translate(-50%);
+                width: 90px;
+                height: 30px;
+                padding: 10px;
+                border: none;
+                border-radius: 3px;
+                font-size: 10px;
+                text-align: center;
+                color: #fff;
+                background: #000000;
+            }
+    </style>
+	<div id="map" style="width: 600px; height: 400px"></div>
+    <br />
+    <button id="fly">Fly to Panama</button>
+	<script>
+  		const map = new maplibregl.Map({
+    		style: 'https://tiles.openfreemap.org/styles/positron', // basemap tiles
+    		center: [-77.7851, 38.5162], // initial position
+    		zoom: 7.0, // initial zoom,
+            minZoom: 3.0,
+            maxZoom: 10.0,
+    		container: 'map',
+            rollEnabled: true, // Enable mouse control of camera roll angle with `Ctrl` + right-click and drag
+  		});
+
+        // zoom buttons
+        map.addControl(new maplibregl.NavigationControl({
+        visualizePitch: true,
+        visualizeRoll: true,
+        showZoom: true,
+        showCompass: true
+        }));
+
+  		// load the map
+  		map.on('load', async () => {
+            // load the red dot image
+  			image = await map.loadImage('https://upload.wikimedia.org/wikipedia/commons/b/b1/Red-Circle-Transparent.png');
+  			map.addImage('sample_icon', image.data);
+
+  			map.addSource('sample_points', {
+  				type: 'geojson',
+  				data: {
+  					type: 'FeatureCollection',
+            		features: [
+                		{
+                    		type: 'Feature',
+                    		properties: {
+                    			name: 'Point1',
+                    			description: '<strong>Crozet</strong><p><a href="https://www.dhr.virginia.gov/historic-registers/002-5087/" target="_blank" title="Opens in a new window">This</a> is where...</p>'
+                    		},
+                    		geometry: {
+                        		type: 'Point',
+                        		coordinates: [-78.2017, 39.1707]
+                    		},
+                		},
+                		{
+                    		type: 'Feature',
+                    		properties: {
+                    			name: 'Point2',
+                    			description: '<strong>Fredericksburg</strong><p><a href="https://cas.umw.edu/geography/geospatial-technologies-award/" target="_blank" title="Opens in a new window">This</a> is where...</p>'
+                    		},
+                    		geometry: {
+                        		type: 'Point',
+                        		coordinates: [-76.4746, 39.9856]
+                    		},
+                		},
+                		{
+                    		type: 'Feature',
+                    		properties: {
+                    			name: 'Point3',
+                    			description: '<strong>D.C.</strong><p><a href="https://en.wikipedia.org/wiki/Columbia_Heights_(Washington,_D.C.)" target="_blank" title="Opens in a new window">This</a> is where...</p>'
+                    		},
+                    		geometry: {
+                        		type: 'Point',
+                        		coordinates: [-77.0344, 39.2001]
+                    		},
+                		}
+            		]
+        		}
+
+  			});
+  			// add layer
+  			map.addLayer({
+  				'id': 'locations_layer',
+  				'type': 'symbol',
+  				'source': 'sample_points',
+  				'layout': {
+  					'icon-image': 'sample_icon',
+  					'icon-size': 0.015,
+  					'icon-allow-overlap': true,
+  					'text-allow-overlap': true
+  				}
+  			})
+  		});
+
+  		// When a click event occurs on a feature in the locations_layer layer, open a popup at the
+        // location of the feature, with description HTML from its properties.
+
+        map.on('click', 'locations_layer', (e) => {
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.description;
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            new maplibregl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(description)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the locations_layer layer.
+
+        map.on('mouseenter', 'locations_layer', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'locations_layer', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        //flying
+
+        document.getElementById('fly').addEventListener('click', () => {
+        // Fly to a random location by offsetting the point -74.50, 40
+        // by up to 5 degrees.
+
+            map.flyTo({
+                center: [
+                    -79.6848, //+ (Math.random() - 0.5) * 10, // randomizes
+                    9.2270 //+ (Math.random() - 0.5) * 10 // randomizes
+                ],
+                essential: true // this animation is considered essential with respect to prefers-reduced-motion
+            });
+        });
+
+  		// var caracas = new maplibregl.Marker()
+  		// .setLngLat([-66.9036,10.4806])
+  		// .addTo(map);
+
+    </script>
+
+</body>
+</html>
+
