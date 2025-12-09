@@ -64,7 +64,7 @@
   		// load the map
   		map.on('load', async () => {
             // load the red dot image
-  			image = await map.loadImage('assets/icons/ca_icon_black.png');
+  			image = await map.loadImage('./assets/icons/ca_icon_black.png');
   			map.addImage('sample_icon', image.data);
 
   			map.addSource('sample_points', {
