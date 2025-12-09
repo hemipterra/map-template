@@ -168,7 +168,7 @@
                 'layout': {},
                 'paint': {
                     'fill-color': '#000000',
-                    'fill-opacity': 0.5
+                    'fill-opacity': 0.0
                 }
             });
 			map.addLayer({
@@ -210,6 +210,13 @@
   		// When a click event occurs on a feature in the locations_layer layer, open a popup at the
         // location of the feature, with description HTML from its properties.
 
+		map.on('click', 'appalachia_boundary_layer_FILL', (e) => {
+            new maplibregl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(e.features[0].properties.description)
+                .addTo(map);
+        });
+
         map.on('click', 'locations_layer', (e) => {
             const coordinates = e.features[0].geometry.coordinates.slice();
             const description = e.features[0].properties.description;
@@ -227,6 +234,13 @@
                 .addTo(map);
         });
 
+		map.on('mouseenter', 'appalachia_boundary_layer_FILL', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'appalachia_boundary_layer_FILL', () => {
+            map.getCanvas().style.cursor = '';
+        });
         // Change the cursor to a pointer when the mouse is over the locations_layer layer.
         map.on('mouseenter', 'locations_layer', () => {
             map.getCanvas().style.cursor = 'pointer';
@@ -236,16 +250,6 @@
             map.getCanvas().style.cursor = '';
         });
 
-        //flying
-        document.getElementById('fly').addEventListener('click', () => {
-        // Fly to specified location
-            map.flyTo({
-                center: [
-                    -79.6848,
-                    9.2270
-                ],
-                essential: true // this animation is considered essential with respect to prefers-reduced-motion
-            });
         });
 
     </script>
