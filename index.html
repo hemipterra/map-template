@@ -17,6 +17,10 @@
 </head>
 <body>
     <style>
+		#container {
+                position: relative;
+                width: 600px;
+        }
         #fly {
                 display: block;
                 position: absolute;
@@ -34,9 +38,10 @@
                 background: #000000;
             }
     </style>
-	<div id="map" style="width: 600px; height: 400px"></div>
-    <br />
-    <button id="fly">Fly to Panama</button>
+	<div id="container">
+		<div id="map" style="width: 600px; height: 400px"></div>
+    	<button id="fly">Fly to Panama</button>
+	</div>
 	<script>
   		const map = new maplibregl.Map({
     		style: 'https://tiles.openfreemap.org/styles/positron', // basemap tiles
