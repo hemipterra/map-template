@@ -108,6 +108,14 @@
             		]
         		}
 			});
+			map.addSource('earthquakes', {
+            	type: 'geojson',
+            	data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson'
+        	});
+			map.addSource('appalachia', {
+            	type: 'geojson',
+            	data: '/data/appalachia_boundary_simplified.geojson'
+        	});
 			map.addSource('maine', {
                 type: 'geojson',
                 data: {
@@ -141,7 +149,7 @@
                     }
                 }
   			});
-  			// add layer
+  			// add layers
   			map.addLayer({
   				'id': 'locations_layer',
   				'type': 'symbol',
@@ -163,6 +171,30 @@
                     'fill-opacity': 0.8
                 }
             });
+			map.addLayer({
+            	'id': 'earthquakes-layer',
+            	'type': 'circle',
+            	'source': 'earthquakes',
+            	'paint': {
+                	'circle-radius': 4,
+                	'circle-stroke-width': 2,
+                	'circle-color': 'red',
+                	'circle-stroke-color': 'white'
+            	}
+        	});
+			map.addLayer({
+            	'id': 'appalachia_boundary_layer',
+            	'type': 'line',
+            	'source': 'appalachia',
+           	 	'layout': {
+                	'line-join': 'round',
+                	'line-cap': 'round'
+            	},
+            	'paint': {
+                	'line-color': '#000000',
+                	'line-width': 3
+            	}
+        	});
   		});
 
   		// When a click event occurs on a feature in the locations_layer layer, open a popup at the
@@ -186,34 +218,25 @@
         });
 
         // Change the cursor to a pointer when the mouse is over the locations_layer layer.
-
         map.on('mouseenter', 'locations_layer', () => {
             map.getCanvas().style.cursor = 'pointer';
         });
-
         // Change it back to a pointer when it leaves.
         map.on('mouseleave', 'locations_layer', () => {
             map.getCanvas().style.cursor = '';
         });
 
         //flying
-
         document.getElementById('fly').addEventListener('click', () => {
-        // Fly to a random location by offsetting the point -74.50, 40
-        // by up to 5 degrees.
-
+        // Fly to specified location
             map.flyTo({
                 center: [
-                    -79.6848, //+ (Math.random() - 0.5) * 10, // randomizes
-                    9.2270 //+ (Math.random() - 0.5) * 10 // randomizes
+                    -79.6848,
+                    9.2270
                 ],
                 essential: true // this animation is considered essential with respect to prefers-reduced-motion
             });
         });
-
-  		// var caracas = new maplibregl.Marker()
-  		// .setLngLat([-66.9036,10.4806])
-  		// .addTo(map);
 
     </script>
 
