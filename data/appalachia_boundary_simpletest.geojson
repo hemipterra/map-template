@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "appalachia_boundary_simpletest",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },
+"features": [
+{ "type": "Feature", "properties": { "STATEFP": "21", "COUNTYFP": "053", "COUNTYNS": "00516873", "GEOID": "21053", "NAME": "Clinton", "NAMELSAD": "Clinton County", "LSAD": "06", "CLASSFP": "H1", "MTFCC": "G4020", "CSAFP": null, "CBSAFP": null, "METDIVFP": null, "FUNCSTAT": "A", "ALAND": 510875184, "AWATER": 21153253, "INTPTLAT": "+36.7272577", "INTPTLON": "-085.1360977" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -87.816828, 32.832858 ], [ -88.914516, 32.576955 ], [ -90.198631, 34.554425 ], [ -86.318761, 34.991169 ], [ -86.205388, 36.640184 ], [ -83.969281, 38.20933 ], [ -84.259431, 39.270796 ], [ -81.24125, 40.650534 ], [ -81.009827, 42.251602 ], [ -74.164678, 42.717207 ], [ -74.689756, 41.361559 ], [ -77.67181, 40.289885 ], [ -81.863615, 34.580175 ], [ -85.609994, 32.727949 ], [ -87.816828, 32.832858 ], [ -87.816828, 32.832858 ] ] ] ] } }
+]
+}
