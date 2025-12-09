@@ -183,6 +183,16 @@
             	}
         	});
 			map.addLayer({
+            	'id': 'appalachia_boundary_layer_FILL',
+            	'type': 'fill',
+            	'source': 'appalachia',
+           	 	'layout': {},
+            	'paint': {
+                	'fill-color': '#000000',
+                    'fill-opacity': 0.8
+            	}
+        	});
+			map.addLayer({
             	'id': 'appalachia_boundary_layer',
             	'type': 'line',
             	'source': 'appalachia',
