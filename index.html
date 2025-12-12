@@ -52,7 +52,7 @@
     		container: 'map',
             rollEnabled: true, // Enable mouse control of camera roll angle with `Ctrl` + right-click and drag
   		});
-
+		let hoveredStateId = null;
         // zoom buttons
         map.addControl(new maplibregl.NavigationControl({
         visualizePitch: true,
@@ -182,7 +182,12 @@
                 'layout': {},
                 'paint': {
                     'fill-color': '#000000',
-                    'fill-opacity': 0.5
+                    'fill-opacity': [
+						'case',
+						['boolean', ['feature-state', 'hover'], false],
+						0.4,
+						0.1
+					]
                 }
             });
 			map.addLayer({
@@ -229,6 +234,32 @@
                 .setLngLat(e.lngLat)
                 .setHTML(e.features[0].properties.description)
                 .addTo(map);
+        });
+
+		map.on('mousemove', 'latinam_countries_layer', (e) => {
+            if (e.features.length > 0) {
+                if (hoveredStateId) {
+                    map.setFeatureState(
+                        {source: 'latinam_countries', id: hoveredStateId},
+                        {hover: false}
+                    );
+                }
+                hoveredStateId = e.features[0].id;
+                map.setFeatureState(
+                    {source: 'latinam_countries', id: hoveredStateId},
+                    {hover: true}
+                );
+            }
+        });
+
+		map.on('mouseleave', 'latinam_countries_layer', () => {
+            if (hoveredStateId) {
+                map.setFeatureState(
+                    {source: 'latinam_countries', id: hoveredStateId},
+                    {hover: false}
+                );
+            }
+            hoveredStateId = null;
         });
 
         map.on('click', 'locations_layer', (e) => {
